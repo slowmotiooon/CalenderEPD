@@ -1,0 +1,16 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"files.autoSave": "onWindowChange",
+		"editor.formatOnPaste": true,
+		"editor.formatOnSave": true,
+		"C_Cpp.clang_format_path": "",
+		"files.associations": {
+			"*.tcc": "cpp"
+		}
+	}
+}
