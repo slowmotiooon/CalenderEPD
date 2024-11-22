@@ -1,0 +1,4 @@
+{
+    "C_Cpp.clang_format_path": "~/.clang-format",
+    "C_Cpp.formatting": "clangFormat"
+}
