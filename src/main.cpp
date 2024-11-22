@@ -17,6 +17,9 @@ ElectricData e_data;
 // 时间相关变量
 struct tm time_info;
 
+// 天气相关变量
+RealTimeWeather rt_weather;
+
 
 void setup() {
     Serial.begin(9600);
@@ -30,5 +33,6 @@ void loop() {
     char timeStr[9];
     snprintf(timeStr, sizeof(timeStr), "%02d:%02d:%02d", time_info.tm_hour, time_info.tm_min, time_info.tm_sec);
     Serial.println(timeStr);
-    delay(1000); // Add a delay to avoid flooding the serial output
+    getWeather();
+    delay(10000); // Add a delay to avoid flooding the serial output
 }

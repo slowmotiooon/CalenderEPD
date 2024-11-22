@@ -5,12 +5,16 @@
 #include <Commons.h>
 
 HTTPClient http;
+const char* ntpServer = "ntp.ntsc.ac.cn";
+const char* realtime_weather = "http://restapi.amap.com/v3/weather/weatherInfo?key=82a7c1f0309a05a4f5074a9a5c42a248&city=110108";
+const char* forecast_weather = "http://restapi.amap.com/v3/weather/weatherInfo?key=82a7c1f0309a05a4f5074a9a5c42a248&city=110108&extensions=all";
 
 extern ElectricData e_data;
+extern RealTimeWeather rt_weather;
+
 extern bool wifi_status;
 extern struct tm time_info;
 
-const char* ntpServer = "ntp.ntsc.ac.cn";
 
 void updateTime() {
     if (!wifi_status) {
@@ -18,9 +22,7 @@ void updateTime() {
         time_info   = *localtime(&now);
         return;
     }
-
     configTime(8 * 3600, 0, ntpServer);
-    // Serial.println("update time");
     if (!getLocalTime(&time_info, 1500)) return;
 }
 
@@ -48,7 +50,7 @@ void getElectricityUsage(){
     Serial.println(code);
     String result = http.getString();
     if(code==200){
-        JsonDocument doc;
+        StaticJsonDocument<1024> doc;
         deserializeJson(doc, result);
         e_data.u = doc["d"]["data"]["vTotal"];
         e_data.i = doc["d"]["data"]["iTotal"];
@@ -67,4 +69,40 @@ void getElectricityUsage(){
     Serial.println(e_data.vol);
     Serial.print("Free Volume: ");
     Serial.println(e_data.freeVol);
+}
+
+void getWeather(){
+    http.begin(realtime_weather);
+    int code = http.GET();
+    Serial.println("Request sent");
+    Serial.println(code);
+    String result = http.getString();
+    if(code==200){
+        JsonDocument doc;
+        deserializeJson(doc, result);
+        const char* r_city = doc["lives"][0]["city"];
+        const char* r_weather = doc["lives"][0]["weather"];
+        const char* r_temperature = doc["lives"][0]["temperature"];
+        const char* r_winddirection = doc["lives"][0]["winddirection"];
+        const char* r_windpower = doc["lives"][0]["windpower"];
+        const char* r_humidity = doc["lives"][0]["humidity"];
+        rt_weather.city = r_city;
+        rt_weather.weather = r_weather;
+        rt_weather.temperature = r_temperature;
+        rt_weather.winddirection = r_winddirection;
+        rt_weather.windpower = r_windpower;
+        rt_weather.humidity = r_humidity;
+    }
+    Serial.print("City: ");
+    Serial.println(rt_weather.city);
+    Serial.print("Weather: ");
+    Serial.println(rt_weather.weather);
+    Serial.print("Temperature: ");
+    Serial.println(rt_weather.temperature);
+    Serial.print("Wind Direction: ");
+    Serial.println(rt_weather.winddirection);
+    Serial.print("Wind Power: ");
+    Serial.println(rt_weather.windpower);
+    Serial.print("Humidity: ");
+    Serial.println(rt_weather.humidity);
 }

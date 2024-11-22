@@ -2,3 +2,4 @@
 
 void updateTime();
 void getElectricityUsage();
+void getWeather();
