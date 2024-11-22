@@ -17,7 +17,7 @@ void wifiConnect(){
 void wifiCheck(){
     if(WiFi.status() == WL_CONNECTED){
         wifi_status = true;
-        if(ip.equals(WiFi.localIP().toString())) ip = WiFi.localIP().toString();
+        if(!ip.equals(WiFi.localIP().toString())) ip = WiFi.localIP().toString();
     }else{
         wifi_status = false;
     }
