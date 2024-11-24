@@ -50,7 +50,7 @@ void getElectricityUsage(){
     Serial.println(code);
     String result = http.getString();
     if(code==200){
-        StaticJsonDocument<1024> doc;
+        JsonDocument doc;
         deserializeJson(doc, result);
         e_data.u = doc["d"]["data"]["vTotal"];
         e_data.i = doc["d"]["data"]["iTotal"];

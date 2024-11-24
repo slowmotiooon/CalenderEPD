@@ -3,6 +3,8 @@
 #include <WebServer.h>
 #include <WebRequests.h>
 #include <Commons.h>
+#include <EpdDisplay.h>
+
 
 // Wi-Fi相关变量
 String ssid = "X-WRT_FFA3";
@@ -25,14 +27,12 @@ void setup() {
     Serial.begin(9600);
     wifiConnect();
     serverInit();
+    displayInit();
+    displayBackground();
 }
 
 void loop() {
     wifiCheck();
     updateTime();
-    char timeStr[9];
-    snprintf(timeStr, sizeof(timeStr), "%02d:%02d:%02d", time_info.tm_hour, time_info.tm_min, time_info.tm_sec);
-    Serial.println(timeStr);
-    getWeather();
-    delay(10000); // Add a delay to avoid flooding the serial output
+    delay(5000);
 }

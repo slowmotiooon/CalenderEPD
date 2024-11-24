@@ -1,5 +1,15 @@
 #pragma once
 
+// 引脚定义
+#define EPD_CS 1
+#define EPD_DC 2
+#define EPD_RST 3
+#define EPD_BUSY 4
+#define EPD_CLK 5
+#define EPD_MOSI 6
+#define EPD_MISO -1 // Not used
+
+// 结构体定义
 struct ElectricData{
     double freeVol = 0;
     double vol = 0;
@@ -16,3 +26,18 @@ struct RealTimeWeather{
     String windpower = "";
     String humidity = "";
 };
+
+// 字体定义:
+// #define CLOCK_FONT u8g2_font_inb46_mn
+#define CLOCK_FONT u8g2_font_logisoso54_tn
+#define DATE_FONT u8g2_font_wqy14_t_gb2312
+#define ELECTRICITY_FONT u8g2_font_wqy16_t_gb2312
+#define TEMPERATURE_FONT u8g2_font_wqy16_t_gb2312
+#define TEMPERATURE_ICON u8g2_font_unifont_t_weather
+#define WEATHER_ICON u8g2_font_open_iconic_weather_4x
+#define CITY_FONT u8g2_font_wqy16_t_gb2312
+#define FORCAST_FONT u8g2_font_wqy12_t_gb2312
+#define CALENDAR_NUM_FONT u8g2_font_logisoso26_tn
+#define CALENDAR_DAY_FONT u8g2_font_wqy12_t_gb2312
+#define CALENDAR_WEEK_FONT u8g2_font_wqy12_t_gb2312
+#define CALENDER_EVENT_FONT u8g2_font_5x8_tn
