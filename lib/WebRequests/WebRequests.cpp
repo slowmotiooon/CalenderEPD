@@ -5,7 +5,7 @@
 #include <Commons.h>
 
 HTTPClient http;
-const char* ntpServer = "ntp.ntsc.ac.cn";
+const char* ntpServer = "ntp.aliyun.com";
 const char* realtime_weather = "http://restapi.amap.com/v3/weather/weatherInfo?key=82a7c1f0309a05a4f5074a9a5c42a248&city=110108";
 const char* forecast_weather = "http://restapi.amap.com/v3/weather/weatherInfo?key=82a7c1f0309a05a4f5074a9a5c42a248&city=110108&extensions=all";
 
@@ -14,20 +14,17 @@ extern RealTimeWeather rt_weather;
 
 extern bool wifi_status;
 extern struct tm time_info;
-extern char hhmm[6];
-extern char old_hhmm[6];
+extern String current_time;
 
 
 void updateTime() {
     if (!wifi_status) {
         time_t now = time(nullptr);
         time_info   = *localtime(&now);
-        strftime(hhmm, 6, "%H:%M", &time_info);
         return;
     }
     configTime(8 * 3600, 0, ntpServer);
-    if (!getLocalTime(&time_info, 1500)) {
-        strftime(hhmm, 6, "%H:%M", &time_info);
+    if (!getLocalTime(&time_info, 3000)) {
         return;
     }
 }

@@ -4,6 +4,7 @@
 #include <WebRequests.h>
 #include <Commons.h>
 #include <EpdDisplay.h>
+#include <UpdateInfo.h>
 
 
 // Wi-Fi相关变量
@@ -18,8 +19,7 @@ ElectricData e_data;
 
 // 时间相关变量
 struct tm time_info;
-char old_hhmm[6];
-char hhmm[6];
+String current_time;
 
 // 天气相关变量
 RealTimeWeather rt_weather;
@@ -28,27 +28,30 @@ int loop_counter = 0;
 
 
 void setup() {
-    Serial.begin(9600);
+    Serial.begin(115200);
     wifiConnect();
     serverInit();
     displayInit();
     updateTime();
     displayUpdateAll();
+    delay(5000);
 }
 
 void loop() {
     wifiCheck();
     updateTime();
-    if(old_hhmm[4]!=hhmm[4]) displayUpdateTime();
+    if(needToUpdateTime()) displayUpdateTime();
+    current_time = asctime(&time_info);
     loop_counter++;
-    for(int i = 0;i<6;i++){
-        old_hhmm[i] = hhmm[i];
-    }
-//     Serial.print("wifi_status: ");
-//     Serial.println(wifi_status);
-//     Serial.print("old_hhmm: ");
-//     Serial.println(old_hhmm);
-//     Serial.print("hhmm: ");
-//     Serial.println(hhmm);
-//     Serial.println(loop_counter);
+    Serial.print("wifi_status: ");
+    Serial.println(wifi_status);
+    Serial.print("time_info_hour: ");
+    Serial.println(time_info.tm_hour);
+    Serial.print("time_info_min: ");
+    Serial.println(time_info.tm_min);
+    Serial.print("time_info_sec: ");
+    Serial.println(time_info.tm_sec);
+    Serial.println("time_info: ");
+    Serial.println(asctime(&time_info));
+    Serial.println(loop_counter);
 }

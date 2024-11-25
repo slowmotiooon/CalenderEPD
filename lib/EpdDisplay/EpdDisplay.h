@@ -5,3 +5,4 @@ void displayTimeTest();
 void displayBackground();
 void displayUpdateAll(bool partial = false);
 void displayUpdateTime();
+void displayUpdateDate();

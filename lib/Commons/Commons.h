@@ -9,10 +9,8 @@
 #define EPD_BUSY 4
 #define EPD_CLK 5
 #define EPD_MOSI 6
-#define EPD_MISO -1 // Not used
+#define EPD_MISO 14 // Not used
 
-#define OLED_SCL 13
-#define OLED_SDA 14
 
 // 结构体定义
 struct ElectricData{
@@ -63,3 +61,4 @@ extern const PartialWindow weather_window;
 extern const PartialWindow pic_window;
 extern const PartialWindow cal_window[5][7];
 extern const PartialWindow whole_screen;
+

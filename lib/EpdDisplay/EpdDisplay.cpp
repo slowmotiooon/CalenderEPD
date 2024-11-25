@@ -15,22 +15,20 @@
 #include <p1.c>
 
 SPISettings epd_spi_settings;
-SPIClass epd_spi;
-
+SPIClass epd_spi(HSPI);
 GxEPD2_BW<GxEPD2_583_T8, GxEPD2_583_T8::HEIGHT / 2> display(
     GxEPD2_583_T8(/*CS*/ EPD_CS, /*DC*/ EPD_DC, /*RST*/ EPD_RST, /*BUSY*/ EPD_BUSY));
-
 U8G2_FOR_ADAFRUIT_GFX u8g2_fonts;
 
-extern tm time_info;
+const String week[] = {"星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"};
 
-extern char hhmm[6];
+extern tm time_info;
 
 void displayInit() {
     epd_spi.begin(EPD_CLK, EPD_MISO, EPD_MOSI, EPD_CS);
     epd_spi_settings = SPISettings();
     display.init(115200, true, 2, false, epd_spi, epd_spi_settings);
-    display.setRotation(4);
+    display.setRotation(0);
     u8g2_fonts.begin(display);
     u8g2_fonts.setFontMode(1);
     u8g2_fonts.setFontDirection(0);
@@ -45,7 +43,6 @@ void displayTimeTest() {
     display.firstPage();
     do{
         display.setCursor(0, 20);
-        display.print(hhmm);
     } while(display.nextPage());
 }
 
@@ -135,6 +132,13 @@ void displayBackground() {
 }
 
 void displayUpdateAll(bool partial){
+    char current_time[6];
+    sprintf(current_time, "%02d:%02d", time_info.tm_hour, time_info.tm_min);
+
+    String year = String(time_info.tm_year + 1900);
+    String month = String(time_info.tm_mon + 1);
+    String day = String(time_info.tm_mday);
+
     if(partial) display.setPartialWindow(whole_screen.x,whole_screen.y,whole_screen.w,whole_screen.h);
     else display.setFullWindow();
     display.firstPage();
@@ -156,16 +160,40 @@ void displayUpdateAll(bool partial){
         display.drawLine(456, 120, 456, 464, GxEPD_BLACK);
         display.drawLine(544, 120, 544, 464, GxEPD_BLACK);
 
+        // 显示图片
+        display.drawBitmap(536, 24, pic_p1, 88, 88, GxEPD_BLACK, GxEPD_WHITE);    // 图像
+
+        // 显示时间
+        u8g2_fonts.setFont(CLOCK_FONT);
+        u8g2_fonts.drawUTF8(24, 86, current_time);
+
+        // 显示日期
+        u8g2_fonts.setFont(DATE_FONT); 
+        u8g2_fonts.drawUTF8(25, 110, String(year + "年"+month+"月"+day+"日 "+week[time_info.tm_wday]).c_str());
+
     } while(display.nextPage());
-    display.hibernate();
 }
 
 void displayUpdateTime(){
-    display.setPartialWindow(time_window.x,time_window.y,time_window.w,time_window.h);
+    display.setPartialWindow(24,24,160,64);
     display.firstPage();
+    char current_time[6];
+    sprintf(current_time, "%02d:%02d", time_info.tm_hour, time_info.tm_min);
     do{
+        
         u8g2_fonts.setFont(CLOCK_FONT);
-        u8g2_fonts.drawUTF8(24,86,hhmm);
+        u8g2_fonts.drawUTF8(24,86,current_time);
+        // u8g2_fonts.drawUTF8(24,86,":");
+        // u8g2_fonts.drawUTF8(24,86,String(time_info.tm_min).c_str());
     } while(display.nextPage());
-    display.hibernate();
+}
+
+void displayUpdateDate(){
+    display.setPartialWindow(24,92,260,24);
+    display.firstPage();
+    String year = String(time_info.tm_year + 1900);
+    do {
+        u8g2_fonts.setFont(DATE_FONT);
+        u8g2_fonts.drawUTF8(25, 110, String(time_info.tm_year+1900+"年").c_str());
+    } while(display.nextPage());
 }
