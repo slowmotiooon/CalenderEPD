@@ -18,9 +18,13 @@ ElectricData e_data;
 
 // 时间相关变量
 struct tm time_info;
+char old_hhmm[6];
+char hhmm[6];
 
 // 天气相关变量
 RealTimeWeather rt_weather;
+
+int loop_counter = 0;
 
 
 void setup() {
@@ -28,11 +32,23 @@ void setup() {
     wifiConnect();
     serverInit();
     displayInit();
-    displayBackground();
+    updateTime();
+    displayUpdateAll();
 }
 
 void loop() {
     wifiCheck();
     updateTime();
-    delay(5000);
+    if(old_hhmm[4]!=hhmm[4]) displayUpdateTime();
+    loop_counter++;
+    for(int i = 0;i<6;i++){
+        old_hhmm[i] = hhmm[i];
+    }
+//     Serial.print("wifi_status: ");
+//     Serial.println(wifi_status);
+//     Serial.print("old_hhmm: ");
+//     Serial.println(old_hhmm);
+//     Serial.print("hhmm: ");
+//     Serial.println(hhmm);
+//     Serial.println(loop_counter);
 }

@@ -1,5 +1,7 @@
 #pragma once
 
+#include <Arduino.h>
+
 // 引脚定义
 #define EPD_CS 1
 #define EPD_DC 2
@@ -8,6 +10,9 @@
 #define EPD_CLK 5
 #define EPD_MOSI 6
 #define EPD_MISO -1 // Not used
+
+#define OLED_SCL 13
+#define OLED_SDA 14
 
 // 结构体定义
 struct ElectricData{
@@ -27,6 +32,13 @@ struct RealTimeWeather{
     String humidity = "";
 };
 
+struct PartialWindow{
+    int x;
+    int y;
+    int w;
+    int h;
+};
+
 // 字体定义:
 // #define CLOCK_FONT u8g2_font_inb46_mn
 #define CLOCK_FONT u8g2_font_logisoso54_tn
@@ -41,3 +53,13 @@ struct RealTimeWeather{
 #define CALENDAR_DAY_FONT u8g2_font_wqy12_t_gb2312
 #define CALENDAR_WEEK_FONT u8g2_font_wqy12_t_gb2312
 #define CALENDER_EVENT_FONT u8g2_font_5x8_tn
+
+
+// 模块分块刷新窗口声明
+extern const PartialWindow time_window;
+extern const PartialWindow date_window;
+extern const PartialWindow elec_window;
+extern const PartialWindow weather_window;
+extern const PartialWindow pic_window;
+extern const PartialWindow cal_window[5][7];
+extern const PartialWindow whole_screen;

@@ -12,6 +12,7 @@
 #include <v_20px.c>
 #include <w_20px.c>
 #include <flash_on_20px.c>
+#include <p1.c>
 
 SPISettings epd_spi_settings;
 SPIClass epd_spi;
@@ -23,13 +24,13 @@ U8G2_FOR_ADAFRUIT_GFX u8g2_fonts;
 
 extern tm time_info;
 
-char hhmmss[10];
+extern char hhmm[6];
 
 void displayInit() {
     epd_spi.begin(EPD_CLK, EPD_MISO, EPD_MOSI, EPD_CS);
     epd_spi_settings = SPISettings();
     display.init(115200, true, 2, false, epd_spi, epd_spi_settings);
-    display.setRotation(2);
+    display.setRotation(4);
     u8g2_fonts.begin(display);
     u8g2_fonts.setFontMode(1);
     u8g2_fonts.setFontDirection(0);
@@ -42,10 +43,9 @@ void displayTimeTest() {
     display.setTextColor(GxEPD_BLACK);
     display.setFont(&FreeMonoBold9pt7b);
     display.firstPage();
-    strftime(hhmmss, 10, "%H:%M:%S", &time_info);
     do{
         display.setCursor(0, 20);
-        display.print(hhmmss);
+        display.print(hhmm);
     } while(display.nextPage());
 }
 
@@ -54,7 +54,7 @@ void displayBackground() {
     display.firstPage();
     do{
         display.fillScreen(GxEPD_WHITE);
-        display.drawRect(16,16,616,448,GxEPD_BLACK);    //边框
+        display.drawRect(16,16,617,449,GxEPD_BLACK);    //边框
         display.drawLine(16,120,632,120,GxEPD_BLACK);   //分割线
 
         display.drawLine(16,134,632,134,GxEPD_BLACK);
@@ -91,7 +91,7 @@ void displayBackground() {
         u8g2_fonts.drawUTF8(294, 66, "10.0A");
         u8g2_fonts.drawUTF8(214, 88, "2200.0W");
         u8g2_fonts.drawUTF8(294, 88, "127.45度");
-        u8g2_fonts.drawUTF8(214,110,"第48周, 教学周第14周");
+        u8g2_fonts.drawUTF8(194,110,"第48周, 教学周第14周");
 
         display.drawRect(368,24,160,88,GxEPD_BLACK);     //天气
         display.drawRect(368,24,40,40,GxEPD_BLACK);     //天气图标
@@ -103,6 +103,8 @@ void displayBackground() {
         u8g2_fonts.drawUTF8(371, 77, "西北风 5级");
         u8g2_fonts.drawUTF8(371, 92, "明天 中到大雪 -13/-11℃");
         u8g2_fonts.drawUTF8(371, 107, "后天 小雨 13/17℃");
+
+        display.drawBitmap(536,24,pic_p1,88,88,GxEPD_BLACK,GxEPD_WHITE);    //图像
 
         u8g2_fonts.setFont(CALENDAR_WEEK_FONT);               //日历星期字体
         u8g2_fonts.drawUTF8(48, 132, "周日");
@@ -130,4 +132,40 @@ void displayBackground() {
 
 
     } while(display.nextPage());
+}
+
+void displayUpdateAll(bool partial){
+    if(partial) display.setPartialWindow(whole_screen.x,whole_screen.y,whole_screen.w,whole_screen.h);
+    else display.setFullWindow();
+    display.firstPage();
+    do {
+        // 显示边框和分界线
+        display.drawRect(16, 16, 617, 449, GxEPD_BLACK);    // 边框
+        display.drawLine(16, 120, 632, 120, GxEPD_BLACK);   // 分割线
+
+        display.drawLine(16, 134, 632, 134, GxEPD_BLACK);
+        display.drawLine(16, 200, 632, 200, GxEPD_BLACK);
+        display.drawLine(16, 266, 632, 266, GxEPD_BLACK);
+        display.drawLine(16, 332, 632, 332, GxEPD_BLACK);
+        display.drawLine(16, 398, 632, 398, GxEPD_BLACK);
+
+        display.drawLine(104, 120, 104, 464, GxEPD_BLACK);
+        display.drawLine(192, 120, 192, 464, GxEPD_BLACK);
+        display.drawLine(280, 120, 280, 464, GxEPD_BLACK);
+        display.drawLine(368, 120, 368, 464, GxEPD_BLACK);
+        display.drawLine(456, 120, 456, 464, GxEPD_BLACK);
+        display.drawLine(544, 120, 544, 464, GxEPD_BLACK);
+
+    } while(display.nextPage());
+    display.hibernate();
+}
+
+void displayUpdateTime(){
+    display.setPartialWindow(time_window.x,time_window.y,time_window.w,time_window.h);
+    display.firstPage();
+    do{
+        u8g2_fonts.setFont(CLOCK_FONT);
+        u8g2_fonts.drawUTF8(24,86,hhmm);
+    } while(display.nextPage());
+    display.hibernate();
 }

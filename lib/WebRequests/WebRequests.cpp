@@ -14,16 +14,22 @@ extern RealTimeWeather rt_weather;
 
 extern bool wifi_status;
 extern struct tm time_info;
+extern char hhmm[6];
+extern char old_hhmm[6];
 
 
 void updateTime() {
     if (!wifi_status) {
         time_t now = time(nullptr);
         time_info   = *localtime(&now);
+        strftime(hhmm, 6, "%H:%M", &time_info);
         return;
     }
     configTime(8 * 3600, 0, ntpServer);
-    if (!getLocalTime(&time_info, 1500)) return;
+    if (!getLocalTime(&time_info, 1500)) {
+        strftime(hhmm, 6, "%H:%M", &time_info);
+        return;
+    }
 }
 
 void getElectricityUsage(){
