@@ -31,6 +31,18 @@
 #include <sunny.c>
 
 #include <p1.c>
+#include <p10.c>
+#include <p11.c>
+#include <p12.c>
+#include <p13.c>
+#include <p2.c>
+#include <p3.c>
+#include <p4.c>
+#include <p5.c>
+#include <p6.c>
+#include <p7.c>
+#include <p8.c>
+#include <p9.c>
 
 SPISettings                                         epd_spi_settings;
 SPIClass                                            epd_spi(HSPI);
@@ -39,6 +51,9 @@ GxEPD2_BW<GxEPD2_583_T8, GxEPD2_583_T8::HEIGHT / 2> display(
 U8G2_FOR_ADAFRUIT_GFX u8g2_fonts;
 
 const String week[] = { "星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六" };
+const unsigned char* pic[]     = { pic_p1, pic_p2, pic_p3,  pic_p4,  pic_p5,  pic_p6, pic_p7,
+                                   pic_p8, pic_p9, pic_p10, pic_p11, pic_p12, pic_p13 };
+int                  pic_index = 4;
 
 extern tm              time_info;
 extern ElectricData    e_data;
@@ -64,6 +79,10 @@ void displayTimeTest() {
     display.setFont(&FreeMonoBold9pt7b);
     display.firstPage();
     do { display.setCursor(0, 20); } while (display.nextPage());
+}
+
+void updatePic() {
+    pic_index = (pic_index + 1) % 13;
 }
 
 const unsigned char* getWeatherIcon() {
@@ -154,7 +173,6 @@ void displayBackground() {
         u8g2_fonts.drawUTF8(371, 77, "西北风 5级");
         u8g2_fonts.drawUTF8(371, 92, "明天 中到大雪 -13/-11℃");
         u8g2_fonts.drawUTF8(371, 107, "后天 小雨 13/17℃");
-
         display.drawBitmap(536, 24, pic_p1, 88, 88, GxEPD_BLACK, GxEPD_WHITE);   // 图像
 
         u8g2_fonts.setFont(CALENDAR_WEEK_FONT);   // 日历星期字体
@@ -217,7 +235,8 @@ void displayUpdateAll(bool partial) {
         display.drawLine(544, 120, 544, 464, GxEPD_BLACK);
 
         // 显示图片
-        display.drawBitmap(536, 24, pic_p1, 88, 88, GxEPD_BLACK, GxEPD_WHITE);   // 图像
+        if (!partial) updatePic();
+        display.drawBitmap(536, 24, pic[pic_index], 88, 88, GxEPD_BLACK, GxEPD_WHITE);   // 图像
 
         // 显示时间
         u8g2_fonts.setFont(CLOCK_FONT);

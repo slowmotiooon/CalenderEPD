@@ -10,13 +10,13 @@ extern Temperature     t_data;
 extern Temperature     old_t_data;
 extern RealTimeWeather rt_weather;
 extern Forecast        forecast;
-extern bool                   partial;
+extern bool            partial;
 
 bool needToUpdateInfo() {
     bool need;
 
     // 设置全局更新
-    if(time_info.tm_hour%30 == 24) partial = false;
+    if (time_info.tm_min % 30 == 24) partial = false;
 
     // 更新时间
     need = time_info.tm_hour != old_time_info.tm_hour || time_info.tm_min != old_time_info.tm_min;
