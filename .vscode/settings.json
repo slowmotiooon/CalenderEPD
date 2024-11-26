@@ -1,0 +1,6 @@
+{
+    "files.associations": {
+        "thermostat.c": "cpp",
+        "sunny.c": "cpp"
+    }
+}

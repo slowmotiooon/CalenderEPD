@@ -1,4 +1,6 @@
 #pragma once
 
-bool needToUpdateTime();
-bool needToUpdateDate();
+bool needToUpdateInfo();
+bool needToUpdateElec();
+bool needToUpdateWeather();
+bool needToUpdateForecast();

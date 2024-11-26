@@ -1,28 +1,35 @@
 #include <Arduino.h>
-#include <WifiConnection.h>
-#include <WebServer.h>
-#include <WebRequests.h>
 #include <Commons.h>
 #include <EpdDisplay.h>
+#include <Temperature.h>
 #include <UpdateInfo.h>
+#include <WebRequests.h>
+#include <WebServer.h>
+#include <WifiConnection.h>
 
 
 // Wi-Fi相关变量
-String ssid = "X-WRT_FFA3";
-String password = "88888888";
-String ip = "";
-String mac = "";
-bool wifi_status = false;
+String ssid        = "X-WRT_FFA3";
+String password    = "88888888";
+String ip          = "";
+String mac         = "";
+bool   wifi_status = false;
 
 // 电量查询相关变量
 ElectricData e_data;
+ElectricData old_e_data;
 
 // 时间相关变量
 struct tm time_info;
-String current_time;
+struct tm old_time_info;
 
 // 天气相关变量
 RealTimeWeather rt_weather;
+Forecast forecast;
+
+// 温湿度相关变量
+Temperature t_data;
+Temperature old_t_data;
 
 int loop_counter = 0;
 
@@ -31,6 +38,8 @@ void setup() {
     Serial.begin(115200);
     wifiConnect();
     serverInit();
+    tempInit();
+    getElectricityUsage();
     displayInit();
     updateTime();
     displayUpdateAll();
@@ -40,8 +49,14 @@ void setup() {
 void loop() {
     wifiCheck();
     updateTime();
-    if(needToUpdateTime()) displayUpdateTime();
-    current_time = asctime(&time_info);
+    updateTemperature();
+    if (needToUpdateElec()) getElectricityUsage();
+    if (needToUpdateWeather()) getWeather();
+    if (needToUpdateForecast()) getForecast();
+    if (needToUpdateInfo()) displayUpdateAll(true);
+    old_time_info = time_info;
+    old_e_data    = e_data;
+    old_t_data    = t_data;
     loop_counter++;
     Serial.print("wifi_status: ");
     Serial.println(wifi_status);
