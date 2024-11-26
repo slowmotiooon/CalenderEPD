@@ -4,3 +4,4 @@ bool needToUpdateInfo();
 bool needToUpdateElec();
 bool needToUpdateWeather();
 bool needToUpdateForecast();
+bool needToUpdateInfoPartial();

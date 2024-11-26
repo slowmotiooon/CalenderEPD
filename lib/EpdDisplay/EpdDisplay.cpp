@@ -14,6 +14,20 @@
 #include <w_20px.c>
 
 #include <air.c>
+#include <bolt.c>
+#include <cloud.c>
+#include <cloudy_snowing.c>
+#include <foggy.c>
+#include <mist.c>
+#include <partly_cloudy_day.c>
+#include <question_mark.c>
+#include <rainy.c>
+#include <rainy_heavy.c>
+#include <rainy_light.c>
+#include <rainy_snow.c>
+#include <snowing.c>
+#include <snowing_heavy.c>
+#include <storm.c>
 #include <sunny.c>
 
 #include <p1.c>
@@ -55,7 +69,35 @@ void displayTimeTest() {
 const unsigned char* getWeatherIcon() {
     String w = rt_weather.weather;
     if (w.equals("晴")) return icon_sunny;
-    return icon_air;
+    if (w.endsWith("云")) return icon_partly_cloudy_day;
+    if (w.equals("阴")) return icon_cloud;
+    if (w.endsWith("风") || w.endsWith("风暴")) {
+        if (w.endsWith("风暴") || w.equals("狂爆风") || w.equals("飓风") || w.equals("龙卷风"))
+            return icon_storm;
+        else
+            return icon_air;
+    }
+    if (w.endsWith("霾")) return icon_mist;
+    if (w.startsWith("雷")) return icon_bolt;
+    if (w.endsWith("雨")) {
+        if (w.equals("强雷阵雨")) return icon_bolt;
+        if (w.startsWith("小雨") || w.startsWith("毛")) return icon_rainy;
+        if (w.endsWith("暴雨") || w.equals("大雨") || w.equals("强阵雨") || w.equals("极端降雨"))
+            return icon_rainy_heavy;
+        else
+            return icon_rainy_light;
+    }
+    if (w.equals("雨雪天气") || w.endsWith("雨夹雪")) return icon_rainy_snow;
+    if (w.endsWith("雪")) {
+        if (w.startsWith("小雪") || w.equals("阵雪")) return icon_cloudy_snowing;
+        if (w.endsWith("暴雪") || w.equals("大雪"))
+            return icon_snowing_heavy;
+        else
+            return icon_snowing;
+    }
+    if (w.endsWith("沙尘暴") || w.endsWith("浮尘") || w.endsWith("扬沙")) return icon_mist;
+    if (w.endsWith("雾")) return icon_foggy;
+    return icon_question_mark;
 }
 
 void displayBackground() {
@@ -248,29 +290,5 @@ void displayUpdateAll(bool partial) {
         }
         else { u8g2_fonts.drawUTF8(409, 40, "同步中"); }
 
-    } while (display.nextPage());
-}
-
-void displayUpdateTime() {
-    display.setPartialWindow(0, 0, display.width(), display.height());
-    display.firstPage();
-    char current_time[6];
-    sprintf(current_time, "%02d:%02d", time_info.tm_hour, time_info.tm_min);
-    do {
-
-        u8g2_fonts.setFont(CLOCK_FONT);
-        u8g2_fonts.drawUTF8(24, 86, current_time);
-        // u8g2_fonts.drawUTF8(24,86,":");
-        // u8g2_fonts.drawUTF8(24,86,String(time_info.tm_min).c_str());
-    } while (display.nextPage());
-}
-
-void displayUpdateDate() {
-    display.setPartialWindow(24, 92, 260, 24);
-    display.firstPage();
-    String year = String(time_info.tm_year + 1900);
-    do {
-        u8g2_fonts.setFont(DATE_FONT);
-        u8g2_fonts.drawUTF8(25, 110, String(time_info.tm_year + 1900 + "年").c_str());
     } while (display.nextPage());
 }

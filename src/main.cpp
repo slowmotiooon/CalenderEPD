@@ -32,6 +32,7 @@ Temperature t_data;
 Temperature old_t_data;
 
 int loop_counter = 0;
+bool partial = true;
 
 
 void setup() {
@@ -53,11 +54,11 @@ void loop() {
     if (needToUpdateElec()) getElectricityUsage();
     if (needToUpdateWeather()) getWeather();
     if (needToUpdateForecast()) getForecast();
-    if (needToUpdateInfo()) displayUpdateAll(true);
+    if (needToUpdateInfo()) displayUpdateAll(partial);
     old_time_info = time_info;
     old_e_data    = e_data;
     old_t_data    = t_data;
-    loop_counter++;
+    partial = true;
     Serial.print("wifi_status: ");
     Serial.println(wifi_status);
     Serial.print("time_info_hour: ");
