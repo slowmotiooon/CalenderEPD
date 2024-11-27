@@ -34,6 +34,9 @@ Forecast        forecast;
 Temperature t_data;
 Temperature old_t_data;
 
+// 日历项相关变量
+CalenderItem calender[5][7];
+
 int  loop_counter = 0;
 bool partial      = true;
 

@@ -13,9 +13,9 @@
 #define AHT_SCL  12
 #define AHT_SDA  13
 
-//更新频率
-#define ELEC_FREQ 2
-#define WEATHER_FREQ 10
+// 更新频率
+#define ELEC_FREQ     30
+#define WEATHER_FREQ  10
 #define FORECAST_FREQ 30
 
 
@@ -47,14 +47,22 @@ struct Forecast
     String tmr_ntemp    = "";
     String aft_dweather = "";
     String aft_nweather = "";
-    String aft_dtemp = "";
-    String aft_ntemp = "";
+    String aft_dtemp    = "";
+    String aft_ntemp    = "";
 };
 
 struct Temperature
 {
     double temperature = 0;
     double humidity    = 0;
+};
+
+struct CalenderItem
+{
+    String day       = "";
+    String mark      = "";
+    String events[6] = { "", "", "", "", "", "" };
+    bool   selected  = false;
 };
 
 struct PartialWindow

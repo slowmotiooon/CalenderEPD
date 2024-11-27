@@ -309,5 +309,15 @@ void displayUpdateAll(bool partial) {
         }
         else { u8g2_fonts.drawUTF8(409, 40, "同步中"); }
 
+        // 显示日历星期
+        u8g2_fonts.setFont(CALENDAR_WEEK_FONT);
+        u8g2_fonts.drawUTF8(48, 132, "周日");
+        u8g2_fonts.drawUTF8(136, 132, "周一");
+        u8g2_fonts.drawUTF8(224, 132, "周二");
+        u8g2_fonts.drawUTF8(312, 132, "周三");
+        u8g2_fonts.drawUTF8(400, 132, "周四");
+        u8g2_fonts.drawUTF8(488, 132, "周五");
+        u8g2_fonts.drawUTF8(576, 132, "周六");
+
     } while (display.nextPage());
 }
