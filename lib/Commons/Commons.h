@@ -10,11 +10,11 @@
 #define EPD_CLK  5
 #define EPD_MOSI 6
 #define EPD_MISO 14   // Not used
-#define AHT_SCL  12
-#define AHT_SDA  13
+#define AHT_SCL  46
+#define AHT_SDA  45
 
 // 更新频率
-#define ELEC_FREQ     30
+#define ELEC_FREQ     10
 #define WEATHER_FREQ  10
 #define FORECAST_FREQ 30
 
